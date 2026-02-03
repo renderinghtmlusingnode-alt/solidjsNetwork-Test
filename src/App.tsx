@@ -138,7 +138,7 @@ const Counter = () => {
 const App = () => {
   return (
     <div>
-      {Array.from({ length: 5000 }, () => (
+      {Array.from({ length: 10000 }, () => (
         <Counter />
       ))}
     </div>
