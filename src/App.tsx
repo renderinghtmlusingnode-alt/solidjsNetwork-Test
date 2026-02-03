@@ -68,22 +68,48 @@
 // };
 
 // export default App;
-import { createSignal} from "solid-js";
-const Counter=()=>{
+import { createSignal, createMemo } from "solid-js";
+
+/* ===============================
+   HEAVY PURE LOGIC (40+ lines)
+================================ */
+function heavyLogic(count:any) {
+  let result = 0;
+  
+
+  return result
+}
+
+/* ===============================
+   COMPONENT
+================================ */
+const Counter = () => {
   const [count, setCount] = createSignal(0);
+
+  // memo = isolated reactive computation
+  const heavy = createMemo(() => heavyLogic(count()));
+
   return (
     <div>
-      <h1>Counter: {count()}</h1>
-      <button onClick={() => setCount(count() + 1)}>Increment</button>
-      <button onClick={() => setCount(count() - 1)}>decrement</button>
+      <h1>
+        {heavy() === 0 && count()}
+      </h1>
+
+      <button onClick={() => setCount(c => c + 1)}>
+        Increment
+      </button>
     </div>
-);
-}
+  );
+};
+
+/* ===============================
+   APP (10,000 instances)
+================================ */
 const App = () => {
   return (
     <div>
-      {Array.from({ length: 100000 }, () => (
-        <Counter/>
+      {Array.from({ length: 10000 }, () => (
+        <Counter />
       ))}
     </div>
   );
