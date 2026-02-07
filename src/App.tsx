@@ -110,21 +110,49 @@ function heavyLogic(count:any) {
   return result
 }
 
-/* ===============================
-   COMPONENT
-================================ */
+// /* ===============================
+//    COMPONENT
+// ================================ */
+// const Counter = () => {
+//   const [count, setCount] = createSignal(0);
+
+//   return (
+//     <div>
+//       <h1>
+//         {count()}
+//       </h1>
+
+//       <button onClick={() => setCount(c => c + 1)}>
+//         Increment
+//       </button>
+//     </div>
+//   );
+// };
+
+// /* ===============================
+//    APP (10,000 instances)
+// ================================ */
+// const App = () => {
+//   return (
+//     <div>
+//       {Array.from({ length: 10000 }, () => (
+//         <Counter />
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default App;
+import { createSignal, For, Show } from "solid-js";
+
+/* ================= Counter ================= */
+
 const Counter = () => {
   const [count, setCount] = createSignal(0);
 
-  // memo = isolated reactive computation
-  const heavy = createMemo(() => heavyLogic(count()));
-
   return (
     <div>
-      <h1>
-        {heavy() > 10 && count()}
-      </h1>
-
+      <div>{count()}</div>
       <button onClick={() => setCount(c => c + 1)}>
         Increment
       </button>
@@ -132,17 +160,47 @@ const Counter = () => {
   );
 };
 
-/* ===============================
-   APP (10,000 instances)
-================================ */
-const App = () => {
+/* ================= Routes ================= */
+
+const Root = () => <div>root</div>;
+const Home = () => <div>home</div>;
+
+const Count = () => {
+  const items = Array.from({ length: 10000 });
   return (
     <div>
-      {Array.from({ length: 10000 }, () => (
-        <Counter />
-      ))}
+      <For each={items}>
+        {() => <Counter />}
+      </For>
     </div>
   );
 };
 
-export default App;
+/* ================= App ================= */
+
+export default function App() {
+  const [route, setRoute] = createSignal("");
+
+  return (
+    <div>
+      <div>click any below route to change route</div>
+
+      <button onClick={() => setRoute("root")}>root</button>
+      <button onClick={() => setRoute("home")}>home</button>
+      <button onClick={() => setRoute("count")}>count</button>
+
+      <Show when={route() === "root"}>
+        <Root />
+      </Show>
+
+      <Show when={route() === "home"}>
+        <Home />
+      </Show>
+
+      <Show when={route() === "count"}>
+        <Count />
+      </Show>
+    </div>
+  );
+}
+
