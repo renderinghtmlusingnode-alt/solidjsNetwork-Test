@@ -166,7 +166,7 @@ const Root = () => <div>root</div>;
 const Home = () => <div>home</div>;
 
 const Count = () => {
-  const items = Array.from({ length: 10000 });
+  const items = Array.from({ length: 100000 });
   return (
     <div>
       <For each={items}>
