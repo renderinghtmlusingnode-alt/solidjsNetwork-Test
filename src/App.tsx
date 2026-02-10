@@ -110,49 +110,18 @@
 //   return result
 // }
 
-// /* ===============================
-//    COMPONENT
-// ================================ */
-// const Counter = () => {
-//   const [count, setCount] = createSignal(0);
-
-//   return (
-//     <div>
-//       <h1>
-//         {count()}
-//       </h1>
-
-//       <button onClick={() => setCount(c => c + 1)}>
-//         Increment
-//       </button>
-//     </div>
-//   );
-// };
-
-// /* ===============================
-//    APP (10,000 instances)
-// ================================ */
-// const App = () => {
-//   return (
-//     <div>
-//       {Array.from({ length: 10000 }, () => (
-//         <Counter />
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default App;
-import { createSignal, For, Show } from "solid-js";
-
-/* ================= Counter ================= */
-
+/* ===============================
+   COMPONENT
+================================ */
 const Counter = () => {
   const [count, setCount] = createSignal(0);
 
   return (
     <div>
-      <div>{count()}</div>
+      <h1>
+        {count()}
+      </h1>
+
       <button onClick={() => setCount(c => c + 1)}>
         Increment
       </button>
@@ -160,47 +129,78 @@ const Counter = () => {
   );
 };
 
-/* ================= Routes ================= */
-
-const Root = () => <div>root</div>;
-const Home = () => <div>home</div>;
-
-const Count = () => {
-  const items = Array.from({ length: 100000 });
+/* ===============================
+   APP (10,000 instances)
+================================ */
+const App = () => {
   return (
     <div>
-      <For each={items}>
-        {() => <Counter />}
-      </For>
+      {Array.from({ length: 10000 }, () => (
+        <Counter />
+      ))}
     </div>
   );
 };
 
-/* ================= App ================= */
+export default App;
+// import { createSignal, For, Show } from "solid-js";
 
-export default function App() {
-  const [route, setRoute] = createSignal("");
+// /* ================= Counter ================= */
 
-  return (
-    <div>
-      <div>click any below route to change route</div>
+// const Counter = () => {
+//   const [count, setCount] = createSignal(0);
 
-      <button onClick={() => setRoute("root")}>root</button>
-      <button onClick={() => setRoute("home")}>home</button>
-      <button onClick={() => setRoute("count")}>count</button>
+//   return (
+//     <div>
+//       <div>{count()}</div>
+//       <button onClick={() => setCount(c => c + 1)}>
+//         Increment
+//       </button>
+//     </div>
+//   );
+// };
 
-      <Show when={route() === "root"}>
-        <Root />
-      </Show>
+// /* ================= Routes ================= */
 
-      <Show when={route() === "home"}>
-        <Home />
-      </Show>
+// const Root = () => <div>root</div>;
+// const Home = () => <div>home</div>;
 
-      <Show when={route() === "count"}>
-        <Count />
-      </Show>
-    </div>
-  );
-}
+// const Count = () => {
+//   const items = Array.from({ length: 100000 });
+//   return (
+//     <div>
+//       <For each={items}>
+//         {() => <Counter />}
+//       </For>
+//     </div>
+//   );
+// };
+
+// /* ================= App ================= */
+
+// export default function App() {
+//   const [route, setRoute] = createSignal("");
+
+//   return (
+//     <div>
+//       <div>click any below route to change route</div>
+
+//       <button onClick={() => setRoute("root")}>root</button>
+//       <button onClick={() => setRoute("home")}>home</button>
+//       <button onClick={() => setRoute("count")}>count</button>
+
+//       <Show when={route() === "root"}>
+//         <Root />
+//       </Show>
+
+//       <Show when={route() === "home"}>
+//         <Home />
+//       </Show>
+
+//       <Show when={route() === "count"}>
+//         <Count />
+//       </Show>
+//     </div>
+//   );
+// }
 
