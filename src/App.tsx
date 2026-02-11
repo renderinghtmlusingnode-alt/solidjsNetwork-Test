@@ -68,7 +68,7 @@
 // };
 
 // export default App;
-import { createSignal, createMemo } from "solid-js";
+// import { createSignal, createMemo } from "solid-js";
 
 // /* ===============================
 //    HEAVY PURE LOGIC (40+ lines)
@@ -113,36 +113,36 @@ import { createSignal, createMemo } from "solid-js";
 /* ===============================
    COMPONENT
 ================================ */
-const Counter = () => {
-  const [count, setCount] = createSignal(0);
+// const Counter = () => {
+//   const [count, setCount] = createSignal(0);
 
-  return (
-    <div>
-      <h1>
-        {count()}
-      </h1>
+//   return (
+//     <div>
+//       <h1>
+//         {count()}
+//       </h1>
 
-      <button onClick={() => setCount(c => c + 1)}>
-        Increment
-      </button>
-    </div>
-  );
-};
+//       <button onClick={() => setCount(c => c + 1)}>
+//         Increment
+//       </button>
+//     </div>
+//   );
+// };
 
-/* ===============================
-   APP (10,000 instances)
-================================ */
-const App = () => {
-  return (
-    <div>
-      {Array.from({ length: 10000 }, () => (
-        <Counter />
-      ))}
-    </div>
-  );
-};
+// /* ===============================
+//    APP (10,000 instances)
+// ================================ */
+// const App = () => {
+//   return (
+//     <div>
+//       {Array.from({ length: 10000 }, () => (
+//         <Counter />
+//       ))}
+//     </div>
+//   );
+// };
 
-export default App;
+// export default App;
 // import { createSignal, For, Show } from "solid-js";
 
 // /* ================= Counter ================= */
@@ -203,4 +203,64 @@ export default App;
 //     </div>
 //   );
 // }
+
+
+import { createSignal, createEffect, onMount } from "solid-js";
+
+export default function App() {
+
+  const [value, setValue] = createSignal(0);
+
+  let span;
+
+  // benchmark variables
+  let start = 0;
+  let total = 0;
+  let count = 0;
+  const RUNS = 1000;
+
+  // EFFECT (DOM update)
+  createEffect(() => {
+    span.textContent = value();
+
+    // stop timer when DOM updated
+    if (count > 0) {
+      const end = performance.now();
+      total += end - start;
+    }
+
+    count++;
+
+    if (count === RUNS) {
+      console.log("SOLID AVG LATENCY:", (total / (RUNS-1)).toFixed(4), "ms");
+    }
+  });
+
+  onMount(() => {
+
+    // start interval AFTER mount
+    setTimeout(() => {
+
+      const interval = setInterval(() => {
+
+        if (count >= RUNS) {
+          clearInterval(interval);
+          return;
+        }
+
+        start = performance.now();
+        setValue(v => v + 1);
+
+      }, 0);
+
+    }, 100); // allow first render
+  });
+
+  return (
+    <div style={{ "font-size": "28px", padding: "40px" }}>
+      value: <span ref={span}></span>
+    </div>
+  );
+}
+
 
