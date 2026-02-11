@@ -203,63 +203,39 @@
 //     </div>
 //   );
 // }
-
-
-import { createSignal, createEffect, onMount } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 
 export default function App() {
 
   const [value, setValue] = createSignal(0);
 
-  let span;
-
-  // benchmark variables
   let start = 0;
+  let end = 0;
   let total = 0;
+  let runs = 1000;
   let count = 0;
-  const RUNS = 1000;
-
-  // EFFECT (DOM update)
-  createEffect(() => {
-    span.textContent = value();
-
-    // stop timer when DOM updated
-    if (count > 0) {
-      const end = performance.now();
-      total += end - start;
-    }
-
-    count++;
-
-    if (count === RUNS) {
-      console.log("SOLID AVG LATENCY:", (total / (RUNS-1)).toFixed(4), "ms");
-    }
-  });
 
   onMount(() => {
 
-    // start interval AFTER mount
-    setTimeout(() => {
+    const interval = setInterval(() => {
 
-      const interval = setInterval(() => {
+      if (count >= runs) {
+        clearInterval(interval);
+        console.log("SOLID avg:", (total / runs).toFixed(4), "ms");
+        return;
+      }
 
-        if (count >= RUNS) {
-          clearInterval(interval);
-          return;
-        }
+      start = performance.now();
+      setValue(v => v + 1);
+      end = performance.now();
+      total += end - start;
+      count++;
+    }, 0);
 
-        start = performance.now();
-        setValue(v => v + 1);
-
-      }, 0);
-
-    }, 100); // allow first render
   });
 
   return (
-    <div style={{ "font-size": "28px", padding: "40px" }}>
-      value: <span ref={span}></span>
-    </div>
+      <div>{value()}</div>
   );
 }
 
