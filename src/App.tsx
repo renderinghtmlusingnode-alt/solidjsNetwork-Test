@@ -212,7 +212,7 @@ export default function App() {
   let start = 0;
   let end = 0;
   let total = 0;
-  let runs = 1000;
+  let runs = 10000;
   let count = 0;
 
   onMount(() => {
